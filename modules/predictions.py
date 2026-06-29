@@ -67,10 +67,11 @@ def predictions_page(pkl_manager):
                     try:
                         # Load model and make predictions
                         model_path = os.path.join('models', selected_model)
+                        base_name = os.path.splitext(selected_data_file)[0]
                         results = pkl_manager.predict_with_pkl_model(
                             model_path=model_path,
                             new_data_path=pred_file_path,
-                            output_path=f"predictions/predictions_{selected_data_file.replace('.xls', '.xlsx')}"
+                            output_path=f"predictions/predictions_{base_name}.xlsx"
                         )
                         
                         if results is not None:
@@ -80,7 +81,7 @@ def predictions_page(pkl_manager):
                             st.subheader("📊 Prediction Summary")
                             
                             total_samples = len(results)
-                            matches = sum(results['Predicted_Result'])
+                            matches = int(results['Predicted_Result'].sum())
                             mismatches = total_samples - matches
                             
                             col1, col2, col3 = st.columns(3)
@@ -93,7 +94,7 @@ def predictions_page(pkl_manager):
                             
                             # Show sample predictions
                             st.subheader("📋 Sample Predictions")
-                            display_cols = ['EXAM_RESULT', 'ANTIBIOTIC_ORDER_NAME', 'Predicted_Class', 'Prediction_Probability']
+                            display_cols = ['EXAM_RESULT', 'ANTIBIOTIC_ORDER_NAME', 'Prediction_Class', 'Prediction_Probability']
                             available_cols = [col for col in display_cols if col in results.columns]
                             st.dataframe(results[available_cols].head(10), use_container_width=True)
                             
@@ -148,10 +149,11 @@ def predictions_page(pkl_manager):
                     try:
                         # Load model and make predictions
                         model_path = os.path.join('models', selected_model)
+                        base_name = os.path.splitext(prediction_file.name)[0]
                         results = pkl_manager.predict_with_pkl_model(
                             model_path=model_path,
                             new_data_path=pred_file_path,
-                            output_path=f"predictions/predictions_{prediction_file.name.replace('.xls', '.xlsx')}"
+                            output_path=f"predictions/predictions_{base_name}.xlsx"
                         )
                         
                         if results is not None:
@@ -161,7 +163,7 @@ def predictions_page(pkl_manager):
                             st.subheader("📊 Prediction Summary")
                             
                             total_samples = len(results)
-                            matches = sum(results['Predicted_Result'])
+                            matches = int(results['Predicted_Result'].sum())
                             mismatches = total_samples - matches
                             
                             col1, col2, col3 = st.columns(3)
@@ -174,7 +176,7 @@ def predictions_page(pkl_manager):
                             
                             # Show sample predictions
                             st.subheader("📋 Sample Predictions")
-                            display_cols = ['EXAM_RESULT', 'ANTIBIOTIC_ORDER_NAME', 'Predicted_Class', 'Prediction_Probability']
+                            display_cols = ['EXAM_RESULT', 'ANTIBIOTIC_ORDER_NAME', 'Prediction_Class', 'Prediction_Probability']
                             available_cols = [col for col in display_cols if col in results.columns]
                             st.dataframe(results[available_cols].head(10), use_container_width=True)
                             
